@@ -1,0 +1,102 @@
+*, ::before, ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #111827; /* ciemne tło */
+  --tw-ring-color: rgb(22 163 74 / 0.7); /* mocniejsza zieleń */
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 10px 15px rgb(22 163 74 / 0.3);
+  --tw-shadow-colored: 0 10px 15px rgb(22 163 74 / 0.4);
+  --tw-scroll-snap-strictness: proximity;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #111827;
+  --tw-ring-color: rgb(22 163 74 / 0.7);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 10px 15px rgb(22 163 74 / 0.3);
+  --tw-shadow-colored: 0 10px 15px rgb(22 163 74 / 0.4);
+  --tw-scroll-snap-strictness: proximity;
+}
+
+/* reset i box-sizing */
+*, ::before, ::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #374151; /* ciemniejszy szary */
+}
+
+::before,
+::after {
+  --tw-content: '';
+}
+
+/* font i linia */
+html, :host {
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  -webkit-tap-highlight-color: transparent;
+  color: #d1fae5; /* jasna zieleń na ciemnym tle */
+  background-color: #111827; /* bardzo ciemne tło */
+}
+
+/* ciało strony */
+body {
+  margin: 0;
+  line-height: inherit;
+}
+
+/* border i cienie */
+.border {
+  border-width: 2px;
+  border-color: #22c55e; /* żywa zieleń */
+  border-radius: 1rem;
+  box-shadow: 0 8px 12px rgb(22 163 74 / 0.5);
+}
+
+/* tło i kolory */
+.bg-green-600 {
+  background-color: rgb(22 163 74);
+  color: #f0fdf4;
+}
+
+/* Przyciski */
+button, [role="button"] {
+  cursor: pointer;
+  background-color: rgb(22 163 74);
+  color: #f0fdf4;
+  border-radius: 1rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  font-weight: 700;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}

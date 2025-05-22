@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"/>
+  <style>
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 90px);
+      grid-template-rows: repeat(3, 90px);
+      gap: 8px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    .cell {
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      background-color: #fff;
+      border: 3px solid #3273dc;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      user-select: none;
+    }
+
+    .cell:hover {
+      background-color: #f0f8ff;
+    }
+
+    .cell:active {
+      transform: scale(0.95);
+    }
+
+    .status-message {
+      font-weight: bold;
+      font-size: 1.3rem;
+      margin-top: 1rem;
+    }
+
+    .won {
+      color: #23d160;
+    }
+
+    .draw {
+      color: #ff3860;
+    }
+  </style>
+</head>
+<body>
+  <section class="section">
+    <div class="container has-text-centered">
+      <h1 class="title is-3">Tic Tac Toe</h1>
+      <div id="board" class="board"></div>
+      <button class="button is-info mt-4" onclick="resetGame()">Zagraj ponownie</button>
+      <p id="status" class="status-message"></p>
+    </div>
+  </section>
+
+  <script>
+    const board = document.getElementById("board");
+    const status = document.getElementById("status");
+    const players = { player1: "🔵", player2: "❌" };
+    let currentPlayer = players.player1;
+    let gameBoard = Array(9).fill("");
+
+    function checkWinner() {
+      const winCombos = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+
+      for (const [a, b, c] of winCombos) {
+        if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+          status.textContent = `🎉 Wygrał gracz: ${gameBoard[a]}`;
+          status.className = "status-message won";
+          disableBoard();
+          return true;
+        }
+      }
+
+      if (!gameBoard.includes("")) {
+        status.textContent = "🤝 Remis!";
+        status.className = "status-message draw";
+        return true;
+      }
+
+      return false;
+    }
+
+    function disableBoard() {
+      Array.from(board.children).forEach(cell => cell.removeEventListener("click", handleClick));
+    }
+
+    function handleClick(e) {
+      const index = e.target.dataset.index;
+      if (!gameBoard[index]) {
+        gameBoard[index] = currentPlayer;
+        e.target.textContent = currentPlayer;
+        if (!checkWinner()) {
+          currentPlayer = currentPlayer === players.player1 ? players.player2 : players.player1;
+          status.textContent = `Tura gracza: ${currentPlayer}`;
+          status.className = "status-message";
+        }
+      }
+    }
+
+    function resetGame() {
+      gameBoard = Array(9).fill("");
+      currentPlayer = players.player1;
+      status.textContent = `Tura gracza: ${currentPlayer}`;
+      status.className = "status-message";
+      board.innerHTML = "";
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.dataset.index = i;
+        cell.addEventListener("click", handleClick);
+        board.appendChild(cell);
+      }
+    }
+
+    resetGame();
+  </script>
+</body>
+</html>

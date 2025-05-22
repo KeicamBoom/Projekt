@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <section class="bg-gray-100 py-8 px-4">
+        <div class="max-w-7xl mx-auto">
+
+          
+
+            <!-- Sekcja wiadomości -->
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-semibold text-gray-800">Popularne gry</h3>
+                <a href="#" class="text-blue-600 hover:underline text-sm">Więcej gier →</a>
+            </div>
+
+            <!-- Kafelki wiadomości -->
+            <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {# Iterujemy po wiadomościach przekazanych z widoku #}
+
+                {% for item in news_items %}
+
+
+                    <a href="{% url 'game_details' item.id %}" class="bg-white rounded-lg shadow hover:shadow-lg transition relative block">
+
+                        {# Obrazek wiadomości #}
+                        <img src="{{ item.image }}" alt="News"
+                             class="w-full h-40 object-cover rounded-t-lg">
+
+                        {# Jeżeli element ma etykietę – wyświetlamy ją jako badge #}
+                        {% if item.label %}
+                            <div class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
+                                {{ item.label }}
+                            </div>
+                        {% endif %}
+
+                        <div class="p-4">
+                            <h4 class="text-lg font-semibold text-gray-800">
+                                {{ item.title }}
+                            </h4>
+
+                            {# Jeśli jest opis – wyświetlamy #}
+                            {% if item.description %}
+                                <p class="text-sm text-gray-600">
+                                    {{ item.description }}
+                                </p>
+                            {% endif %}
+
+                            <p class="text-xs text-gray-500 mt-2">
+                                {{ item.date }}
+                            </p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

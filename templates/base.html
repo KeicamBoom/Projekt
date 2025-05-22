@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Gier</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-200 font-sans antialiased text-gray-800">
+<div class="flex flex-col min-h-screen">
+
+    <!-- Główny nagłówek -->
+    <header class="bg-white border-b border-gray-200 shadow-sm z-40">
+        {% include 'partials/top_nav.html' %}
+    </header>
+
+    <!-- Pasek kategorii gier -->
+
+
+    <!-- Główna zawartość -->
+    <main class="flex-grow">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Stopka -->
+    <footer class="bg-gray-900 text-gray-400 text-sm pt-10 pb-6 px-4 mt-10">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="mb-1">&copy; 2025 Portal Gier. Wszystkie prawa zastrzeżone.</p>
+            <p class="text-gray-500">Maciej Hołosiewicz — nr albumu 70488</p>
+        </div>
+    </footer>
+
+</div>
+
+{% block extra_scripts %}
+{% endblock %}
+</body>
+</html>
+
+

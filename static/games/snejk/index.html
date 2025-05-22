@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gra Snake</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      margin: 0;
+      padding-top: 20px;
+    }
+
+    canvas {
+      border: 3px solid #4a4a4a;
+      background-color: #ffffff;
+    }
+
+    #score {
+      font-size: 24px;
+      margin: 10px;
+      font-weight: bold;
+    }
+
+    #game-over {
+      color: red;
+      font-size: 28px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    #restart-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 15px;
+      cursor: pointer;
+      background-color: #00d1b2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #restart-btn:hover {
+      background-color: #00b89c;
+    }
+  </style>
+</head>
+<body>
+  <div id="score">Wynik: 0</div>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <div id="game-over">Koniec gry!</div>
+  <button id="restart-btn" onclick="restartGame()">Zagraj ponownie</button>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const gridSize = 20;
+    let snake, direction, food, blueFood, redWall, score, gameInterval;
+    const scoreDisplay = document.getElementById("score");
+    const gameOverDisplay = document.getElementById("game-over");
+
+    document.addEventListener("keydown", changeDirection);
+
+    function initGame() {
+      snake = [{ x: 200, y: 200 }];
+      direction = "RIGHT";
+      food = randomFood();
+      blueFood = null;
+      redWall = null;
+      score = 0;
+      updateScore();
+      gameOverDisplay.style.display = "none";
+      if (gameInterval) clearInterval(gameInterval);
+      gameInterval = setInterval(update, 200);
+    }
+
+    function changeDirection(event) {
+      const key = event.key;
+      if (key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+      if (key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+      if (key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+      if (key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+    }
+
+    function update() {
+      let head = { ...snake[0] };
+      if (direction === "UP") head.y -= gridSize;
+      if (direction === "DOWN") head.y += gridSize;
+      if (direction === "LEFT") head.x -= gridSize;
+      if (direction === "RIGHT") head.x += gridSize;
+
+      // Zjedzenie jedzenia
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        updateScore();
+        food = randomFood();
+      } else {
+        snake.pop();
+      }
+
+      // Zjedzenie niebieskiego
+      if (blueFood && head.x === blueFood.x && head.y === blueFood.y) {
+        score = Math.max(0, score - 1);
+        updateScore();
+        if (snake.length > 1) snake.pop();
+        blueFood = null;
+      }
+
+      // Zderzenie z czerwoną ścianą
+      if (redWall &&
+        ((redWall.orientation === "horizontal" && head.y === redWall.y) ||
+         (redWall.orientation === "vertical" && head.x === redWall.x))) {
+        endGame();
+        return;
+      }
+
+      // Odbijanie się od ścian
+      if (head.x < 0 || head.x >= 400) {
+        direction = direction === "LEFT" ? "RIGHT" : "LEFT";
+        head.x = Math.max(0, Math.min(head.x, 380));
+      }
+      if (head.y < 0 || head.y >= 400) {
+        direction = direction === "UP" ? "DOWN" : "UP";
+        head.y = Math.max(0, Math.min(head.y, 380));
+      }
+
+      // Dodanie nowej głowy
+      snake.unshift(head);
+      draw();
+    }
+
+    function draw() {
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Jedzenie
+      ctx.fillStyle = "#ff3860";
+      ctx.fillRect(food.x, food.y, gridSize, gridSize);
+
+      // Niebieskie jedzenie
+      if (blueFood) {
+        ctx.fillStyle = "#3273dc";
+        ctx.fillRect(blueFood.x, blueFood.y, gridSize, gridSize);
+      }
+
+      // Czerwona ściana
+      if (redWall) {
+        ctx.fillStyle = "red";
+        if (redWall.orientation === "horizontal") {
+          ctx.fillRect(0, redWall.y, canvas.width, gridSize);
+        } else {
+          ctx.fillRect(redWall.x, 0, gridSize, canvas.height);
+        }
+      }
+
+      // Snake
+      ctx.fillStyle = "#f1c40f";
+      snake.forEach(segment => ctx.fillRect(segment.x, segment.y, gridSize, gridSize));
+    }
+
+    function updateScore() {
+      scoreDisplay.textContent = `Wynik: ${score}`;
+    }
+
+    function randomFood() {
+      return {
+        x: Math.floor(Math.random() * 20) * gridSize,
+        y: Math.floor(Math.random() * 20) * gridSize
+      };
+    }
+
+    function spawnRedWall() {
+      const side = Math.floor(Math.random() * 4);
+      if (side === 0) redWall = { x: 0, y: 0, orientation: "horizontal" };
+      if (side === 1) redWall = { x: 0, y: 380, orientation: "horizontal" };
+      if (side === 2) redWall = { x: 0, y: 0, orientation: "vertical" };
+      if (side === 3) redWall = { x: 380, y: 0, orientation: "vertical" };
+
+      setTimeout(() => redWall = null, 8000);
+      setTimeout(spawnRedWall, Math.random() * 12000 + 3000);
+    }
+
+    function spawnBlueFood() {
+      blueFood = randomFood();
+      setTimeout(() => blueFood = null, 7000);
+      setTimeout(spawnBlueFood, Math.random() * 8000 + 9000);
+    }
+
+    function endGame() {
+      clearInterval(gameInterval);
+      gameOverDisplay.style.display = "block";
+    }
+
+    function restartGame() {
+      initGame();
+    }
+
+    // Start gry
+    initGame();
+    spawnRedWall();
+    spawnBlueFood();
+  </script>
+</body>
+</html>
+
